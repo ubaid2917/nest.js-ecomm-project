@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './common/exceptions/error.exceptions';
 import { ValidationPipe } from '@nestjs/common';
-import { ResponseInterceptor } from './common/interceptors/interceptors.interceptor';
+import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 
 
 async function bootstrap() {

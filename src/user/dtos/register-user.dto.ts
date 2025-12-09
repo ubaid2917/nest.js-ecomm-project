@@ -1,7 +1,7 @@
 import { IsString, IsEmail, IsNotEmpty, IsDefined } from 'class-validator'; 
 import { Role } from '../enums/role.enum';
 
-export class CreateUserDto {
+export class RegisterUserDto {
   @IsDefined({ message: 'Name is required' })
   @IsString()
   @IsNotEmpty({ message: 'Name cannot be empty' })
