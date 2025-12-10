@@ -4,7 +4,8 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { CommonQueryDto } from '../common/dto/common-query.dto'; 
 import { PaginationUtil } from '../utils/pagination.utils';
-import { PaginatedResponse } from '../common/interfaces/pagination.interface';
+import { PaginatedResponse } from '../common/interfaces/pagination.interface'; 
+import { Public } from '../auth/decorator/public.decorator';
 
 
 @Controller('category')
@@ -17,6 +18,7 @@ export class CategoryController {
   }
 
   @Get()
+  @Public()
   findAll(@Query() query: CommonQueryDto) {
     return this.categoryService.findAll(query.search, query.page, query.limit);
   }

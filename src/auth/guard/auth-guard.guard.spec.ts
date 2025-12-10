@@ -1,4 +1,4 @@
-import { AuthGuardGuard } from './auth-guard.guard';
+import { AuthGuardGuard } from './auth.guard';
 
 describe('AuthGuardGuard', () => {
   it('should be defined', () => {

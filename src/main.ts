@@ -3,18 +3,26 @@ import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './common/exceptions/error.exceptions';
 import { ValidationPipe } from '@nestjs/common';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
-
+import { AuthGuard } from './auth/guard/auth.guard';
+import { Reflector } from '@nestjs/core'; 
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);   
-  
+  const app = await NestFactory.create(AppModule);
+
+  // global guard
+  const reflector = app.get(Reflector);
+  app.useGlobalGuards(new AuthGuard(reflector));
+
+
   // global validation pipe
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }));
+  app.useGlobalPipes(
+    new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }),
+  );
 
   // global error handling
-  app.useGlobalFilters(new AllExceptionsFilter()); 
+  app.useGlobalFilters(new AllExceptionsFilter());
 
-  //global interceptors 
+  //global interceptors
   app.useGlobalInterceptors(new ResponseInterceptor());
   await app.listen(process.env.PORT ?? 3000);
 }
