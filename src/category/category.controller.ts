@@ -2,6 +2,10 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestj
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import { CommonQueryDto } from '../common/dto/common-query.dto'; 
+import { PaginationUtil } from '../utils/pagination.utils';
+import { PaginatedResponse } from '../common/interfaces/pagination.interface';
+
 
 @Controller('category')
 export class CategoryController {
@@ -13,8 +17,8 @@ export class CategoryController {
   }
 
   @Get()
-  findAll(@Query('search') search?: string) {
-    return this.categoryService.findAll(search);
+  findAll(@Query() query: CommonQueryDto) {
+    return this.categoryService.findAll(query.search, query.page, query.limit);
   }
 
   @Get(':id')
