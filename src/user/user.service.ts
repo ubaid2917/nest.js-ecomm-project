@@ -8,26 +8,42 @@ import { CommonQueryDto } from '../common/dto/common-query.dto';
 import { PaginatedResponse } from 'src/common/interfaces/pagination.interface';
 import { PaginationUtil } from 'src/utils/pagination.utils';
 
-
 @Injectable()
 export class UserService {
-   constructor(
-    @InjectRepository(User) 
+  constructor(
+    @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-   ){}
+  ) {}
 
   async findAll(queryDto: CommonQueryDto): Promise<PaginatedResponse<User>> {
-    const where = queryDto.search ? { 
-      name: ILike(`%${queryDto.search}%`),
-      email: ILike(`%${queryDto.search}%`),
-     } : {};
-     
-    return PaginationUtil.paginate(this.userRepository, queryDto.page, queryDto.limit, where);   
-   
+    const where = queryDto.search
+      ? {
+          name: ILike(`%${queryDto.search}%`),
+          email: ILike(`%${queryDto.search}%`),
+        }
+      : {};
+
+    return PaginationUtil.paginate(
+      this.userRepository,
+      queryDto.page,
+      queryDto.limit,
+      where,
+    );
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: string): Promise<any> {
+    const user = await this.userRepository.findOne({
+      where: { id: id },
+    });
+
+    if (user) {
+      const { password, ...result } = user;
+
+      return {
+        data: result,
+      };
+    }
+    return { data: null };
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
