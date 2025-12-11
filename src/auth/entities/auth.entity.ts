@@ -1,6 +1,7 @@
-import { BaseEntity } from "src/common/entity/base.entity";
-import { Column } from "typeorm";
+import { BaseEntity } from "../../common/entity/base.entity";
+import { Column, Entity } from "typeorm";
 
+@Entity('auth')
 export class Auth extends BaseEntity {
 
     @Column()

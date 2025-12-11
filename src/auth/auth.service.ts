@@ -8,6 +8,7 @@ import { User } from '../user/entities/user.entity';
 import { Repository } from 'typeorm';
 import { RegisterUserDto } from './dtos/register-user.dto';
 import { LoginUserDto } from './dtos/login-user.dto';
+import { Auth } from './entities/auth.entity';
 import { hashPassword, comparePassword } from './constants/password.constant';
 import {
   generateAccessToken,
@@ -15,12 +16,14 @@ import {
 } from './constants/auth.constant';
 import { LoginResponse } from './constants/login.interface';
 
-
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+
+    @InjectRepository(Auth)
+    private readonly authRepository: Repository<Auth>,
   ) {}
 
   async register(registerUserDto: RegisterUserDto): Promise<{
@@ -72,6 +75,19 @@ export class AuthService {
 
     const accessToken = await generateAccessToken(payload);
     const refreshToken = await generateRefreshToken(payload);
+
+    const isRefreshTokenExist = await this.authRepository.findOne({
+      where: { userId: user.id },
+    });
+
+    if (isRefreshTokenExist) {
+      await this.authRepository.update({ userId: user.id }, { refreshToken });
+    } else {
+      await this.authRepository.save({
+        userId: user.id,
+        refreshToken,
+      });
+    }
 
     return {
       user: userData,
