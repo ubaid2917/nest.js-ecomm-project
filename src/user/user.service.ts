@@ -17,8 +17,11 @@ export class UserService {
    ){}
 
   async findAll(queryDto: CommonQueryDto): Promise<PaginatedResponse<User>> {
-    const where = queryDto.search ? { name: ILike(`%${queryDto.search}%`) } : {};
-   
+    const where = queryDto.search ? { 
+      name: ILike(`%${queryDto.search}%`),
+      email: ILike(`%${queryDto.search}%`),
+     } : {};
+     
     return PaginationUtil.paginate(this.userRepository, queryDto.page, queryDto.limit, where);   
    
   }
