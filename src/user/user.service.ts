@@ -7,6 +7,8 @@ import { PaginatedResponse } from 'src/common/interfaces/pagination.interface';
 import { PaginationUtil } from 'src/utils/pagination.utils';
 import { UserEducation } from './entities/user-education.entity';
 import { CreateEducationDto } from './dto/create-user-education';
+import { CreateSkillsDto } from './dto/create-user-skill.dto'; 
+import { UserSkill } from './entities/user-skills.entity';
 
 @Injectable()
 export class UserService {
@@ -16,6 +18,9 @@ export class UserService {
 
     @InjectRepository(UserEducation)
     private readonly userEducationRepo: Repository<UserEducation>,
+
+    @InjectRepository(UserSkill)
+    private readonly userSkillRepo: Repository<UserSkill>,
   ) {}
 
   async findAll(queryDto: CommonQueryDto): Promise<PaginatedResponse<User>> {
@@ -61,6 +66,7 @@ export class UserService {
     return { message: 'Category deleted successfully' };
   }
 
+  // User Education
   async createEducation(
     createEducationDto: CreateEducationDto,
     userId: string,
@@ -120,37 +126,54 @@ export class UserService {
       limit: take,
       totalPages: Math.ceil(total / take),
     };
-  }  
+  }
 
   async findOneEducation(id: string) {
-     return this.userEducationRepo.findOne({
-       where: { id: id },
-     })
-  }   
+    return this.userEducationRepo.findOne({
+      where: { id: id },
+    });
+  }
 
-  async updateEducation(id: string, updateEducationDto: any) { 
-     
+  async updateEducation(id: string, updateEducationDto: any) {
     const isExist = await this.userEducationRepo.findOne({
-       where: { id: id },
-     });
- 
-     if (!isExist) {
-       throw new NotFoundException('Education not found');
-     }
+      where: { id: id },
+    });
 
-     return this.userEducationRepo.update(id, updateEducationDto);
-  }   
+    if (!isExist) {
+      throw new NotFoundException('Education not found');
+    }
+
+    return this.userEducationRepo.update(id, updateEducationDto);
+  }
 
   async removeEducation(id: string) {
-     const isExist = await this.userEducationRepo.findOne({
-       where: { id: id },
-     });
- 
-     if (!isExist) {
-       throw new NotFoundException('Education not found');
-     }
+    const isExist = await this.userEducationRepo.findOne({
+      where: { id: id },
+    });
 
-     await this.userEducationRepo.delete(id);
-     return { message: 'Education deleted successfully' };
+    if (!isExist) {
+      throw new NotFoundException('Education not found');
+    }
+
+    await this.userEducationRepo.delete(id);
+    return { message: 'Education deleted successfully' };
+  }
+
+  // User Skills
+  async createSkills(
+    createSkillDto: CreateSkillsDto[],
+    userId: string,
+  ): Promise<UserSkill[]> {
+
+    const skillToSave = createSkillDto.map((skillDto) => {
+      return this.userSkillRepo.create({
+        ...skillDto,
+        user: { id: userId },
+      });
+    });
+
+    const skill = await this.userSkillRepo.save(skillToSave);
+
+    return skill;
   }
 }

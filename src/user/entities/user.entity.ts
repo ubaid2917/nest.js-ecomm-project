@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { Role } from '../enums/role.enum';
 import { BaseEntity } from '../../common/entity/base.entity';
 import { UserEducation } from './user-education.entity';
+import { UserSkill } from './user-skills.entity';
 @Entity()
 export class User extends BaseEntity {
   @Column()
@@ -30,5 +31,8 @@ export class User extends BaseEntity {
   resumeUrl: string;  
 
   @OneToMany(() => UserEducation, (education) => education.user)
-  educations: UserEducation[];
+  educations: UserEducation[];   
+
+  @OneToMany(() => UserSkill, (skill) => skill.user)
+  skills: UserSkill[];
 }

@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateEducationDto } from './dto/create-user-education';
+import { CreateSkillsDto } from './dto/create-user-skill.dto';
 import { CommonQueryDto } from '../common/dto/common-query.dto';
 
 @Controller('user')
@@ -32,37 +33,56 @@ export class UserController {
     return this.userService.remove(id);
   }
 
-  @Post('education')
-  async create(@Body() createEducationDto: CreateEducationDto, @Request() req) { 
-    const userId = req.user.id;   
-    console.log('userId', req.user)
-    const data = await this.userService.createEducation(createEducationDto, userId);
+  @Post('education/create')
+  async create(@Body() createEducationDto: CreateEducationDto, @Request() req) {
+    const userId = req.user.id;
+    console.log('userId', req.user);
+    const data = await this.userService.createEducation(
+      createEducationDto,
+      userId,
+    );
     return {
       data,
     };
-  }   
+  }
 
   @Get('education/list')
-  async findAllEducation(@Query() query: CommonQueryDto, @Request() req) { 
-    const user = req.user; 
-    console.log('userId', req.user)
+  async findAllEducation(@Query() query: CommonQueryDto, @Request() req) {
+    const user = req.user;
     return this.userService.findAllEducations(query, user);
-  }  
-
+  }
 
   @Get('education/:id/detail')
   async findOneEducation(@Param('id') id: string) {
     const data = await this.userService.findOneEducation(id);
-    return {data}
-  }   
+    return { data };
+  }
 
   @Patch('education/:id/update')
-  async updateEducation(@Param('id') id: string, @Body() updateEducationDto: CreateEducationDto) {
-    return  this.userService.updateEducation(id, updateEducationDto);
+  async updateEducation(
+    @Param('id') id: string,
+    @Body() updateEducationDto: CreateEducationDto,
+  ) {
+    return this.userService.updateEducation(id, updateEducationDto);
   }
 
   @Delete('education/:id/delete')
   async removeEducation(@Param('id') id: string) {
     return this.userService.removeEducation(id);
   }
+
+  // skills
+  @Post('skill/create')
+  async createSkill(
+    @Body() createSkillDto: CreateSkillsDto[],
+    @Request() req,
+  ) {
+    const userId = req.user.id;
+    const data = await this.userService.createSkills(createSkillDto, userId);
+    return {
+      data,
+    };
+  }   
+
+
 }
