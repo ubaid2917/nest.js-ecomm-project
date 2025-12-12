@@ -182,5 +182,19 @@ export class UserService {
       where: { user: { id: user.id } },
     });
     return skills;
+  }   
+   
+  async removeSkill(id: string) {
+    const isExist = await this.userSkillRepo.findOne({
+      where: { id: id },
+    });
+
+    if (!isExist) {
+      throw new NotFoundException('Skill not found');
+    }
+
+    await this.userSkillRepo.delete(id);
+    return { message: 'Skill deleted successfully' };
   }
+
 }

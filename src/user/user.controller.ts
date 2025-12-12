@@ -86,5 +86,10 @@ export class UserController {
     const user = req.user;
     const data = await this.userService.getAllSkills(query, user); 
     return {data}
+  }   
+    
+  @Delete('skill/:id/delete')
+  async removeSkill(@Param('id') id: string) {
+    return this.userService.removeSkill(id);
   }
 }
