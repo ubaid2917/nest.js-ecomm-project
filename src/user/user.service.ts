@@ -50,7 +50,6 @@ export class UserService {
       const isExist = await this.userRepository.findOne({
         where: { id: id },
       });
-    
         if (!isExist) {
           throw new NotFoundException('Category not found');
         }
