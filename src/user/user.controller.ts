@@ -33,6 +33,7 @@ export class UserController {
     return this.userService.remove(id);
   }
 
+  // education
   @Post('education/create')
   async create(@Body() createEducationDto: CreateEducationDto, @Request() req) {
     const userId = req.user.id;
@@ -93,5 +94,5 @@ export class UserController {
     return this.userService.removeSkill(id);
   }
 
-  
+
 }
