@@ -92,4 +92,6 @@ export class UserController {
   async removeSkill(@Param('id') id: string) {
     return this.userService.removeSkill(id);
   }
+
+  
 }
