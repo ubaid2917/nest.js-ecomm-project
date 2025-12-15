@@ -72,7 +72,7 @@ export class UserController {
     return this.userService.removeEducation(id);
   }
 
-  // skills
+  // user skills
   @Post('skill/create')
   async createSkill(@Body() createSkillDto: CreateSkillsDto[], @Request() req) {
     const data = await this.userService.createSkills(createSkillDto, req.user.id);
